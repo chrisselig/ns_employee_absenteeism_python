@@ -55,7 +55,7 @@ raw_data = pd.read_csv("D:/Personal/BIDAMIA_GoogleDrive/Business Intelligence/Py
 
 # Summary
 
-Way back in August 2017 I started to apply R to working with data and one of my early projects was to explore the Nova Scotia Government employee absentee [data.](https://data.novascotia.ca/Public-Service/Nova-Scotia-Government-Employee-Absenteeism/3kpf-veux) You can see the original post [here.](https://bidamia.ca/post/nova-scotia-government-employee-absentee-analysis/)
+Way back in August 2017 I started to apply R to working with data and one of my early projects was to explore the Nova Scotia (NS) Government employee absentee [data.](https://data.novascotia.ca/Public-Service/Nova-Scotia-Government-Employee-Absenteeism/3kpf-veux) You can see the original post [here.](https://bidamia.ca/post/nova-scotia-government-employee-absentee-analysis/)
 
 I am revisiting this analysis because I am now learning python and I got tired of doing courses and wanted to apply what I learned so far. Also, there is now a few years more worth of data. 
 
@@ -88,17 +88,45 @@ In total, there are 7 columns and 3,568,910 rows with data spanning from April 1
 head_table = raw_data[['absence_date','absence_type_category','absence_type','absence_hours', 'employee_type']].head()[1:6]
 
 head_table.to_html(index = False, justify='center')
-
-
 ```
+
+# Data Cleaning section
+fix 65+
+remove time
+change to date column?
 
 
 # Exploratory Analysis
 
-Originally, I started by taking a look at the total number of days absent which not only did not account for the fact that the people were not always absent for full days but I also only looked at total absences. A more realistic approach would have been to standardize absences per 100 people or absence hours per 100 people.  
+Originally, I started by taking a look at the total number of days absent which not only did not account for the fact that the people were not always absent for full days but I also only looked at total absences. A more realistic approach would have been to standardize absences per 100 people or absence hours per 100 people. Unfortunately, I cannot find any information on how many people are employed by the NS so I will continue with counts alone. 
 
 ```{python}
-# raw_data..head()
+# raw_data.groupby(['age_cohort_on_absence_date']).value_counts
+pivot = (raw_data.pivot_table(index=['age_cohort_on_absence_date'],values = ['absence_date'],aggfunc='size', fill_value=0)
+    .sort_values(ascending=False))
+
+# plt.bar()
+# test.sort_values((['age_cohort_on_absence_date'], ascending = False))
 ```
+
+```{python}
+fig, ax = plt.subplots()
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['left'].set_visible(False)
+
+barh_absences_by_age_group = raw_data['age_cohort_on_absence_date'].value_counts().sort_values(ascending = True).plot(kind='barh',figsize = (7,6))
+
+plt.title('Count of Absences by Age Group Cohort', y = 1.02)
+plt.ylabel('Age Cohort')
+
+plt.show()
+```
+
+```{python}
+
+```
+
 
 Check for statistical differences with union vs non-union employees
