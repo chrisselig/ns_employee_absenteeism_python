@@ -92,10 +92,13 @@ head_table.to_html(index = False, justify='center')
 
 ```
 
+
+# Exploratory Analysis
+
+Originally, I started by taking a look at the total number of days absent which not only did not account for the fact that the people were not always absent for full days but I also only looked at total absences. A more realistic approach would have been to standardize absences per 100 people or absence hours per 100 people.  
+
 ```{python}
 # raw_data..head()
 ```
-
-# Exploratory Analysis
 
 Check for statistical differences with union vs non-union employees
