@@ -1,0 +1,101 @@
+---
+title: "Nova Scotia Employee Absenteeism - in Python"
+author: "Chris Selig"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+    )
+```
+
+```{r}
+library(reticulate)
+```
+
+
+```{r setEnvironment}
+use_condaenv("learnPython", required = TRUE)
+```
+
+```{r}
+# conda_install('learnPython','pretty_html_table')
+```
+
+```{python}
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+```
+
+```{python setPythonOptions}
+pd.options.display.max_columns = None
+pd.options.display.max_rows = None
+```
+
+```{python updateData}
+# # Return all 3.7MM rows (as of Aug 4th, 2020)
+# raw_data = pd.read_json('https://data.novascotia.ca/resource/3kpf-veux.json?$limit=4000000')
+# 
+# # Write file
+# raw_data.to_csv('../00_data/ns_employee_absenteeism.csv')
+```
+
+```{python}
+# desktop path
+raw_data = pd.read_csv("D:/Personal/BIDAMIA_GoogleDrive/Business Intelligence/Python/Data/ns_employee_absenteeism.csv")
+#raw_data = pd.read_csv("C:/Personal/BIDAMIA_GoogleDrive/Business Intelligence/Python/Data/ns_employee_absenteeism.csv")
+# raw_data = pd.read_csv('../00_data/ns_employee_absenteeism.csv')
+```
+
+
+# Summary
+
+Way back in August 2017 I started to apply R to working with data and one of my early projects was to explore the Nova Scotia Government employee absentee [data.](https://data.novascotia.ca/Public-Service/Nova-Scotia-Government-Employee-Absenteeism/3kpf-veux) You can see the original post [here.](https://bidamia.ca/post/nova-scotia-government-employee-absentee-analysis/)
+
+I am revisiting this analysis because I am now learning python and I got tired of doing courses and wanted to apply what I learned so far. Also, there is now a few years more worth of data. 
+
+Goal:
+
+The code for this analysis can be found on my [Github page.](https://github.com/chrisselig/ns_employee_absenteeism_python)
+
+
+# The Data
+
+As before, I will start with an exploratory analysis of the data, but first, let's review the columns in the dataset.
+
+1. absence_date: The date of absence for the employee
+
+2. absence_hours: The number of hours the employee was absent
+
+3. absence_type: The reason for the absence
+
+4. absence_type_category: The absence reasons are grouped into standard categories
+
+5. age_cohort_on_absence_date: The age range of the employee, the day they were absent
+
+6. employee_type: Whether the employee was union, or non-union
+
+7. gender: The gender of the employee
+
+In total, there are 7 columns and 3,568,910 rows with data spanning from April 1st 2014 to March 31st, 2020.
+
+```{python, results="asis"}
+head_table = raw_data[['absence_date','absence_type_category','absence_type','absence_hours', 'employee_type']].head()[1:6]
+
+head_table.to_html(index = False, justify='center')
+
+
+```
+
+```{python}
+# raw_data..head()
+```
+
+# Exploratory Analysis
+
+Check for statistical differences with union vs non-union employees
