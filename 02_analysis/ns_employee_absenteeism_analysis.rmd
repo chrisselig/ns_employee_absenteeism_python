@@ -91,6 +91,15 @@ head_table.to_html(index = False, justify='center')
 ```
 
 # Data Cleaning section
+```{python}
+# raw_data.dtypes
+tidy_data = raw_data.copy()
+tidy_data['age_cohort_on_absence_date'] = tidy_data['age_cohort_on_absence_date'].str.replace(pat = '65+',repl = '65 +', regex = False)
+
+# tidy_data['absence_date'] =pd.to_datetime(raw_data['absence_date'])
+```
+
+
 fix 65+
 remove time
 change to date column?
@@ -102,7 +111,7 @@ Originally, I started by taking a look at the total number of days absent which 
 
 ```{python}
 # raw_data.groupby(['age_cohort_on_absence_date']).value_counts
-pivot = (raw_data.pivot_table(index=['age_cohort_on_absence_date'],values = ['absence_date'],aggfunc='size', fill_value=0)
+pivot = (tidy_data.pivot_table(index=['age_cohort_on_absence_date'],values = ['absence_date'],aggfunc='size', fill_value=0)
     .sort_values(ascending=False))
 
 # plt.bar()
@@ -116,7 +125,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_visible(False)
 ax.spines['left'].set_visible(False)
 
-barh_absences_by_age_group = raw_data['age_cohort_on_absence_date'].value_counts().sort_values(ascending = True).plot(kind='barh',figsize = (7,6), color = ('#4C586F'))
+barh_absences_by_age_group = tidy_data['age_cohort_on_absence_date'].value_counts().sort_values(ascending = True).plot(kind='barh',figsize = (7,6), color = ('#4C586F'))
 
 plt.title('Count of Absences by Age Group Cohort', y = 1.02)
 plt.ylabel('Age Cohort')
