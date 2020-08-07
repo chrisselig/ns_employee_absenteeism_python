@@ -98,7 +98,7 @@ change to date column?
 
 # Exploratory Analysis
 
-Originally, I started by taking a look at the total number of days absent which not only did not account for the fact that the people were not always absent for full days but I also only looked at total absences. A more realistic approach would have been to standardize absences per 100 people or absence hours per 100 people. Unfortunately, I cannot find any information on how many people are employed by the NS so I will continue with counts alone. 
+Originally, I started by taking a look at the total number of days absent which not only did not account for the fact that the people were not always absent for full days but I also only looked at total absences. A more realistic approach would have been to standardize absences per 100 people or absence hours per 100 people. Unfortunately, I cannot find any information on how many people are employed by the NS government so I will continue with counts alone. 
 
 ```{python}
 # raw_data.groupby(['age_cohort_on_absence_date']).value_counts
@@ -116,7 +116,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_visible(False)
 ax.spines['left'].set_visible(False)
 
-barh_absences_by_age_group = raw_data['age_cohort_on_absence_date'].value_counts().sort_values(ascending = True).plot(kind='barh',figsize = (7,6))
+barh_absences_by_age_group = raw_data['age_cohort_on_absence_date'].value_counts().sort_values(ascending = True).plot(kind='barh',figsize = (7,6), color = ('#4C586F'))
 
 plt.title('Count of Absences by Age Group Cohort', y = 1.02)
 plt.ylabel('Age Cohort')
