@@ -1,0 +1,314 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Nova Scotia Employee Absenteeism - in Python},
+  pdfauthor={Chris Selig},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{Nova Scotia Employee Absenteeism - in Python}
+\author{Chris Selig}
+\date{08 August, 2020}
+
+\begin{document}
+\maketitle
+
+\hypertarget{summary}{%
+\section{Summary}\label{summary}}
+
+Way back in August 2017 I started to apply R to working with data and
+one of my early projects was to explore the Nova Scotia (NS) Government
+employee absentee
+\href{https://data.novascotia.ca/Public-Service/Nova-Scotia-Government-Employee-Absenteeism/3kpf-veux}{data.}
+You can see the original post
+\href{https://bidamia.ca/post/nova-scotia-government-employee-absentee-analysis/}{here.}
+
+I am revisiting this analysis because I am now learning python and I got
+tired of doing courses and wanted to apply what I learned so far. Also,
+there is now a few years more worth of data.
+
+Goal:
+
+The code for this analysis can be found on my
+\href{https://github.com/chrisselig/ns_employee_absenteeism_python}{Github
+page.}
+
+\hypertarget{the-data}{%
+\section{The Data}\label{the-data}}
+
+As before, I will start with an exploratory analysis of the data, but
+first, let's review the columns in the dataset.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  absence\_date: The date of absence for the employee
+\item
+  absence\_hours: The number of hours the employee was absent
+\item
+  absence\_type: The reason for the absence
+\item
+  absence\_type\_category: The absence reasons are grouped into standard
+  categories
+\item
+  age\_cohort\_on\_absence\_date: The age range of the employee, the day
+  they were absent
+\item
+  employee\_type: Whether the employee was union, or non-union
+\item
+  gender: The gender of the employee
+\end{enumerate}
+
+In total, there are 7 columns and 3,568,910 rows with data spanning from
+April 1st 2014 to March 31st, 2020.
+
+'
+
+\n  
+
+\n    
+
+\n      
+
+absence\_date
+
+\n      
+
+absence\_type\_category
+
+\n      
+
+absence\_type
+
+\n      
+
+absence\_hours
+
+\n      
+
+employee\_type
+
+\n    
+
+\n  
+
+\n  
+
+\n    
+
+\n      
+
+2014-04-01
+
+\n      
+
+Short Term Illness
+
+\n      
+
+Short Term Illness
+
+\n      
+
+8.00
+
+\n      
+
+Union
+
+\n    
+
+\n    
+
+\n      
+
+2014-04-01
+
+\n      
+
+Short Term Illness
+
+\n      
+
+Short Term Illness
+
+\n      
+
+9.00
+
+\n      
+
+Union
+
+\n    
+
+\n    
+
+\n      
+
+2014-04-01
+
+\n      
+
+Short Term Illness
+
+\n      
+
+Short Term Illness
+
+\n      
+
+9.00
+
+\n      
+
+Union
+
+\n    
+
+\n    
+
+\n      
+
+2014-04-01
+
+\n      
+
+General Illness
+
+\n      
+
+General Illness
+
+\n      
+
+7.75
+
+\n      
+
+Union
+
+\n    
+
+\n  
+
+\n
+
+'
+
+\hypertarget{exploratory-analysis}{%
+\section{Exploratory Analysis}\label{exploratory-analysis}}
+
+Originally, I started by taking a look at the total number of days
+absent which not only did not account for the fact that the people were
+not always absent for full days but I also only looked at total
+absences. A more realistic approach would have been to standardize
+absences per 100 people or absence hours per 100 people. Unfortunately,
+I cannot find any information on how many people are employed by the NS
+government so I will continue with counts alone.
+
+Below is the count of absences by age group. Interestingy enough, the
+initial trend did not hold. When I looked at this a few years ago, the
+50-54 age category had the most absences. Now it is the 55-59 crowd. I
+wonder if that is because the 50 - 54 crowd could now be in the 55 - 59
+crowd?
+
+At the bottom of the scale, the under 25 crowd still has the lowest
+absences. Either way, I do not want to infer much from this data because
+I have no idea of the counts of each employee cohort.
+
+\includegraphics{ns_employee_absenteeism_analysis_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+Moving on, let's take a look at the counts of absences by category.
+
+\includegraphics{ns_employee_absenteeism_analysis_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+The first thing I noticed about this plot was that there is a new
+category: Pandemic\_Leave. At the time of writing (August 2020), the
+world is still experiencing COVID-19 and alot of places in Canada are
+still working from home, evening though restrictions have been loosening
+across the country.
+
+Family illnesses seems to be the most popular reason for an absence
+across all the age categories. As before, short and long term illnesses
+increase as the employee age increases, which makes total sense because
+people tend to develop health issues as they get older.
+
+Next, I will explore absences by month.
+
+\includegraphics{ns_employee_absenteeism_analysis_files/figure-latex/countByMonth-1.pdf}
+
+As before, there is a spike in March, July, August and December. March
+spiked probaby relate to it being March break for schools. Parents often
+take time off for vacationing with their children at this time. July and
+August are the most popular months for taking vacation for most people
+while December has the Christmas holidays where people tend to take time
+off to spend with family.
+
+The last section for the exploratory analysis will take a look at
+absences by employee type. The Nova Scotia government has both unionized
+and non-union employees.
+
+\begin{verbatim}
+## Union        3021112
+## Non-Union     547798
+## Name: employee_type, dtype: int64
+\end{verbatim}
+
+Check for statistical differences with union vs non-union employees
+
+\end{document}

@@ -2,7 +2,8 @@
 title: "Nova Scotia Employee Absenteeism - in Python"
 author: "Chris Selig"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output:
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -22,11 +23,7 @@ library(reticulate)
 use_condaenv("learnPython", required = TRUE)
 ```
 
-```{r}
-# conda_install('learnPython','pretty_html_table')
-```
-
-```{python}
+```{python importLibraries}
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -46,7 +43,7 @@ pd.options.display.max_rows = None
 # raw_data.to_csv('../00_data/ns_employee_absenteeism.csv')
 ```
 
-```{python}
+```{python readInData}
 # desktop path
 raw_data = pd.read_csv("D:/Personal/BIDAMIA_GoogleDrive/Business Intelligence/Python/Data/ns_employee_absenteeism.csv")
 #raw_data = pd.read_csv("C:/Personal/BIDAMIA_GoogleDrive/Business Intelligence/Python/Data/ns_employee_absenteeism.csv")
@@ -109,14 +106,6 @@ Below is the count of absences by age group. Interestingy enough, the initial tr
 
 At the bottom of the scale, the under 25 crowd still has the lowest absences. Either way, I do not want to infer much from this data because I have no idea of the counts of each employee cohort.
 
-```{python}
-# raw_data.groupby(['age_cohort_on_absence_date']).value_counts
-# pivot = (tidy_data.pivot_table(index=['age_cohort_on_absence_date'],values = ['absence_date'],aggfunc='size', fill_value=0)
-#     .sort_values(ascending=False))
-
-# plt.bar()
-# test.sort_values((['age_cohort_on_absence_date'], ascending = False))
-```
 
 ```{python}
 fig, ax = plt.subplots()
@@ -160,6 +149,12 @@ Next, I will explore absences by month.
 ```{python countByMonth}
 tidy_data['Month'] = pd.DatetimeIndex(tidy_data['absence_date']).month
 
+fig, ax = plt.subplots()
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['left'].set_visible(False)
+
 tidy_data.groupby(['Month'])['absence_date'].count().plot(kind = 'bar', figsize = (7,6),color = ('#4C586F'), rot = 0)
 plt.title('Count of Absences by Month', y = 1.02)
 plt.show()
@@ -167,10 +162,25 @@ plt.show()
 
 As before, there is a spike in March, July, August and December. March spiked probaby relate to it being March break for schools. Parents often take time off for vacationing with their children at this time. July and August are the most popular months for taking vacation for most people while December has the Christmas holidays where people tend to take time off to spend with family.
 
-Absences by gender
+The last section for the exploratory analysis will take a look at absences by employee type. The Nova Scotia government has both unionized and non-union employees. Below are the counts.
 
 
-Absences by employee type
+
+```{python}
+fig, ax = plt.subplots()
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['left'].set_visible(False)
+
+tidy_data.groupby(['employee_type'])['absence_date'].count().plot(kind = 'barh',figsize = (7,6),color = ('#4C586F'))
+plt.title('Count by Employee Type')
+
+plt.show()
+```
+
+The number of absences by unionized employees is approximately 5 times the amount of non-union. Without employee counts by type though, we should not read too much into this.
 
 
-Check for statistical differences with union vs non-union employees
+
+
