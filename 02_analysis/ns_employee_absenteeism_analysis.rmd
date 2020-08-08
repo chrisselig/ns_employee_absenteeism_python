@@ -30,6 +30,7 @@ use_condaenv("learnPython", required = TRUE)
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import datetime
 ```
 
 ```{python setPythonOptions}
@@ -153,5 +154,23 @@ plt.show()
 The first thing I noticed about this plot was that there is a new category: Pandemic_Leave. At the time of writing (August 2020), the world is still experiencing COVID-19 and alot of places in Canada are still working from home, evening though restrictions have been loosening across the country.
 
 Family illnesses seems to be the most popular reason for an absence across all the age categories. As before, short and long term illnesses increase as the employee age increases, which makes total sense because people tend to develop health issues as they get older.
+
+Next, I will explore absences by month. 
+
+```{python countByMonth}
+tidy_data['Month'] = pd.DatetimeIndex(tidy_data['absence_date']).month
+
+tidy_data.groupby(['Month'])['absence_date'].count().plot(kind = 'bar', figsize = (7,6),color = ('#4C586F'), rot = 0)
+plt.title('Count of Absences by Month', y = 1.02)
+plt.show()
+```
+
+As before, there is a spike in March, July, August and December. March spiked probaby relate to it being March break for schools. Parents often take time off for vacationing with their children at this time. July and August are the most popular months for taking vacation for most people while December has the Christmas holidays where people tend to take time off to spend with family.
+
+Absences by gender
+
+
+Absences by employee type
+
 
 Check for statistical differences with union vs non-union employees
