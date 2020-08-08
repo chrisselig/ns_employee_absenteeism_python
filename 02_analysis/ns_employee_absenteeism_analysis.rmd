@@ -166,7 +166,7 @@ The last section for the exploratory analysis will take a look at absences by em
 
 
 
-```{python}
+```{python plotEmployeeType}
 fig, ax = plt.subplots()
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
@@ -174,13 +174,34 @@ ax.spines['bottom'].set_visible(False)
 ax.spines['left'].set_visible(False)
 
 tidy_data.groupby(['employee_type'])['absence_date'].count().plot(kind = 'barh',figsize = (7,6),color = ('#4C586F'))
-plt.title('Count by Employee Type')
+plt.title('Count of Absences by Employee Type')
 
 plt.show()
 ```
 
 The number of absences by unionized employees is approximately 5 times the amount of non-union. Without employee counts by type though, we should not read too much into this.
 
+## Is the Difference in Counts Absences by Gender Significant?
 
+Instead of doing some time series forecasting, as in the previous article, I thought I would mix it up and test to see if the counts of absences by gender is significant.
 
+First, here is a look at the count of absences by gender: 
+
+```{python genderPlot}
+fig, ax = plt.subplots()
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['left'].set_visible(False)
+
+tidy_data.groupby(['gender'])['absence_date'].count().plot(kind = 'barh',figsize = (7,6),color = ('#4C586F'))
+plt.title('Count of Absences by Gender')
+
+plt.show()
+```
+
+Females have taken approximately 700,700 more absences than their male counterparts, but again, we do not know the employee counts. An interesting note, when I did completed this visual, only two genders were listed. Now, there is an "undefined" category with 116 total absences.
+```{python}
+# tidy_data['gender'].value_counts()
+```
 
