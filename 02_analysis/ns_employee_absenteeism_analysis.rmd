@@ -84,30 +84,29 @@ As before, I will start with an exploratory analysis of the data, but first, let
 
 In total, there are 7 columns and 3,568,910 rows with data spanning from April 1st 2014 to March 31st, 2020.
 
-```{python, results="asis"}
-head_table = raw_data[['absence_date','absence_type_category','absence_type','absence_hours', 'employee_type']].head()[1:6]
-
-head_table.to_html(index = False, justify='center')
-```
-
-# Data Cleaning section
-```{python}
-# raw_data.dtypes
+```{python dataCleaning}
+# Clean up '65+' with '65 +'
 tidy_data = raw_data.copy()
 tidy_data['age_cohort_on_absence_date'] = tidy_data['age_cohort_on_absence_date'].str.replace(pat = '65+',repl = '65 +', regex = False)
 
-# tidy_data['absence_date'] =pd.to_datetime(raw_data['absence_date'])
+# Remove time from absence_date
+tidy_data['absence_date'] = tidy_data['absence_date'].str.replace('T00:00:00.000','')
 ```
 
+```{python, results="asis"}
+head_table = tidy_data[['absence_date','absence_type_category','absence_type','absence_hours', 'employee_type']].head()[1:6]
 
-fix 65+
-remove time
-change to date column?
+head_table.to_html(index = False, justify='center')
+```
 
 
 # Exploratory Analysis
 
 Originally, I started by taking a look at the total number of days absent which not only did not account for the fact that the people were not always absent for full days but I also only looked at total absences. A more realistic approach would have been to standardize absences per 100 people or absence hours per 100 people. Unfortunately, I cannot find any information on how many people are employed by the NS government so I will continue with counts alone. 
+
+Below is the count of absences by age group. Interestingy enough, the initial trend did not hold. When I looked at this a few years ago, the 50-54 age category had the most absences. Now it is the 55-59 crowd. I wonder if that is because the 50 - 54 crowd could now be in the 55 - 59 crowd?
+
+At the bottom of the scale, the under 25 crowd still has the lowest absences. Either way, I do not want to infer much from this data because I have no idea of the counts of each employee cohort.
 
 ```{python}
 # raw_data.groupby(['age_cohort_on_absence_date']).value_counts
@@ -132,6 +131,8 @@ plt.ylabel('Age Cohort')
 
 plt.show()
 ```
+
+Moving on, let's take a look at the counts of absences by category.
 
 ```{python}
 
